@@ -1,0 +1,19 @@
+{
+  "name": "imdb-sentiment-analysis",
+  "version": "1.0.0",
+  "description": "An IMDB sentiment analysis tool.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "contributors": [
+    "Josh Tang",
+    "Lauren Eterno",
+    "Bandy Tan",
+    "Paula Romo Santos"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
