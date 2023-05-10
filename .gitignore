@@ -1,2 +1,4 @@
+# Auxiliary API files...
 api/bin
 api/node_modules
+api/scripts/nltk
