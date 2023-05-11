@@ -2,3 +2,7 @@
 api/bin
 api/node_modules
 api/scripts/nltk
+output/
+
+# Config stuff (mostly for database credentials)
+.env

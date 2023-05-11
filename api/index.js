@@ -31,8 +31,9 @@ const validator = async (req, res, next) => {
 
 app.post('/submit', validator, (req, res) => {
     let body = JSON.stringify(req.body);
-    fs.writeFileSync('scripts/req.json', body);
+    fs.writeFileSync('scripts/req.json', body, { flag: 'w' });
     let { stdout } = shell.cd('scripts').exec('./pipeline.sh');
+    shell.cd('..');
     res.setHeader('Content-Type', 'application/json');
     res.send(stdout);
 });
@@ -41,4 +42,4 @@ app.post('/submit', validator, (req, res) => {
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}...`);
-})
+});

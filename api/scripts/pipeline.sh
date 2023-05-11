@@ -29,4 +29,4 @@ python3 $load_mysql_script $review_csv $movie_csv $tfidf_csv
 cat $out_json
 
 # Cleanup:
-rm $in_file $cleaned_csv # $out_json
+rm $in_file $cleaned_csv $out_json $review_csv $movie_csv $tfidf_csv
