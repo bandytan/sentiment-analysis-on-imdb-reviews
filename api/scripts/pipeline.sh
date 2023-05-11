@@ -15,10 +15,18 @@ python3 $raw_to_csv_script $cleaned_csv
 
 # Sentiment analysis, TF-IDF, cosine similarity:
 mkdir -p nltk
-out_file=sentiment.json
+out_json=sentiment.json
+review_csv=reviews.csv
+movie_csv=movie.csv
+tfidf_csv=tfidf.csv
 sentiment_analysis_script=sentiment_analysis.py
-python3 $sentiment_analysis_script $cleaned_csv $out_file
-cat $out_file
+python3 $sentiment_analysis_script $cleaned_csv $out_json $review_csv $movie_csv $tfidf_csv
+
+# Load data into MySQL:
+load_mysql_script=to_mysql.py
+python3 $load_mysql_script $review_csv $movie_csv $tfidf_csv
+
+cat $out_json
 
 # Cleanup:
-rm $in_file $cleaned_csv $out_file
+rm $in_file $cleaned_csv # $out_json

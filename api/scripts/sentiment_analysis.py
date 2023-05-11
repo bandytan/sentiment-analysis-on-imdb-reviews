@@ -4,14 +4,14 @@ from nltk.corpus import stopwords
 from textblob import TextBlob
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-from scipy.spatial.distance import cosine
+from scipy.stats import pearsonr
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pandas as pd
 
 warnings.filterwarnings('ignore') 
 
-in_csv = sys.argv[1]
-out_json = sys.argv[2]
+_, in_csv, out_json, *out_csvs = sys.argv
+review_csv, movie_csv, tfidf_csv = out_csvs
 
 ############################
 ## NLTK & TF-IDF ANALYSIS ##
@@ -56,14 +56,35 @@ def generate_nlp_features(df):
 df, top_words = generate_nlp_features(movie_data)
 df['review_polarity'] = df['review'].apply(lambda x: TextBlob(x).sentiment.polarity)
 
+movie_name = df['movie_name'].iloc[0]
+tfidf_list = [{'word': wd, 'tfidf': frq} for wd, frq in top_words.items()]
+tfidf_df = pd.DataFrame(tfidf_list)
+tfidf_df['movie_name'] = movie_name
+
 #############################
 ## COSINE SIMILARITY SCORE ##
 #############################
+df = df[['movie_name', 'review', 'norm_rating', 'review_polarity']]
+pearson_r, p_value = pearsonr(df['norm_rating'], df['review_polarity'])
 results = {
     'reviews': df[['review', 'norm_rating', 'review_polarity']].to_dict(orient='records'),
-    'cosine_similarity': 1 - cosine(df['norm_rating'], df['review_polarity']),
+    'pearson_r': pearson_r,
+    'p_value': p_value,
     'top_words': top_words
 }
 
+movie_df = pd.DataFrame([{
+    'movie_name': movie_name,
+    'pearson_r': pearson_r,
+    'p_value': p_value
+}])
+
+# Here, we stream our outputs into several files:
+# sentiment.json (which is piped to the API's HTTP response)
+# [a whole bunch of csvs]  (which is fed directly into MySQL) 
 with open(out_json, 'w') as out:
     json.dump(results, out)
+
+df.to_csv(review_csv, index=False, header=False)
+movie_df.to_csv(movie_csv, index=False, header=False)
+tfidf_df.to_csv(tfidf_csv, index=False, header=False)
