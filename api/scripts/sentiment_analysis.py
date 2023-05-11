@@ -62,7 +62,7 @@ tfidf_df = pd.DataFrame(tfidf_list)
 tfidf_df['movie_name'] = movie_name
 
 #############################
-## COSINE SIMILARITY SCORE ##
+##  PEARSON'S CORRELATION  ##
 #############################
 df = df[['movie_name', 'review', 'norm_rating', 'review_polarity']]
 pearson_r, p_value = pearsonr(df['norm_rating'], df['review_polarity'])
