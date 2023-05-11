@@ -73,7 +73,7 @@ app.get('/stats/:movie', (req, res) => {
 
 app.get('/reviews/:movie', limitValidator, (req, res) => {
     let { movie } = req.params;
-    let { limit } = req.query ?? 1000;
+    let limit = req.query.limit ?? 1000;
     const query = `
     SELECT * FROM reviews
     WHERE reviews.movie_name = ?
